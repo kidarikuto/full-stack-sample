@@ -1,0 +1,4 @@
+{
+  "/hello_frontend/page": "app/hello_frontend/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js"
+}
