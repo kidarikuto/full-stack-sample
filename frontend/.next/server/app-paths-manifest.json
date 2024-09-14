@@ -1,4 +1,4 @@
 {
-  "/hello_backend_db/page": "app/hello_backend_db/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js"
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/inventory/products/page": "app/inventory/products/page.js"
 }

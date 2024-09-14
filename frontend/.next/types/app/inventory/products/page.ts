@@ -1,8 +1,8 @@
-// File: /workspaces/frontend/app/hello_backend_db/page.tsx
-import * as entry from '../../../../app/hello_backend_db/page.js'
+// File: /workspaces/frontend/app/inventory/products/page.tsx
+import * as entry from '../../../../../app/inventory/products/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../../app/hello_backend_db/page.js')
+type TEntry = typeof import('../../../../../app/inventory/products/page.js')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{
