@@ -33,6 +33,8 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS = [
     # local apps
     "rest_framework",
+    'corsheaders',
+    'api.hello_db',
     # default
     "django.contrib.admin",
     "django.contrib.auth",
@@ -43,6 +45,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # local apps
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    # default
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -152,3 +158,11 @@ LOGGING = {
         }
     }
 }
+
+# すべてのオリジンを許可する場合
+CORS_ALLOW_ALL_ORIGINS = True
+
+# または特定のオリジンを許可する場合（例: ReactアプリケーションのURL）
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]

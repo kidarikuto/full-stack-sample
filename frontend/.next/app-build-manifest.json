@@ -1,9 +1,9 @@
 {
   "pages": {
-    "/hello_frontend/page": [
+    "/hello_backend_db/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/hello_frontend/page.js"
+      "static/chunks/app/hello_backend_db/page.js"
     ],
     "/layout": [
       "static/chunks/webpack.js",
