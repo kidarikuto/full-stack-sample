@@ -1,4 +1,5 @@
 {
+  "/inventory/products/page": "app/inventory/products/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/inventory/products/page": "app/inventory/products/page.js"
+  "/inventory/products/[id]/page": "app/inventory/products/[id]/page.js"
 }
