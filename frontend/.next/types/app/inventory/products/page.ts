@@ -1,4 +1,4 @@
-// File: /workspaces/app/frontend/app/inventory/products/page.tsx
+// File: /workspaces/fullstack/frontend/app/inventory/products/page.tsx
 import * as entry from '../../../../../app/inventory/products/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
