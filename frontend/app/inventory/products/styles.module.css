@@ -1,0 +1,26 @@
+.layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.header {
+    background-color: #2fa2b4bd;
+    padding: 20pv;
+}
+.container {
+    flex-grow: 1;
+    display: flex;
+}
+.navbar {
+    width: 200px;
+    background-color: #d21818dc;
+    padding: 20px;
+}
+.content {
+    flex-grow: 2;
+    padding: 20px;
+}
+.footer {
+    background-color: #2fa2b4bd;
+    padding: 20px;
+}
