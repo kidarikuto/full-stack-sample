@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "rest_framework",
     'corsheaders',
     'api.hello_db',
+    'api.inventory',
     # default
     "django.contrib.admin",
     "django.contrib.auth",

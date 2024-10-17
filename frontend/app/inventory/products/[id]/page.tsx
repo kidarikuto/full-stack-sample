@@ -43,7 +43,7 @@ type InventoryData = {
     inventory: number;
 };
 
-export default function PagePage({ params }: {
+export default function Page({ params }: {
     params: { id: number },
 }) {
 
