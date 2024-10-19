@@ -13,14 +13,22 @@ class ProductView(APIView):
     """
     商品操作に関する関数
     """
+    def get_object(self, pk):
+        try:
+            return Product.objects.get(pk=pk)
+        except:
+            raise NotFound
 
-    def get(self, request, format=None):
+    def get(self, request, id=None, format=None):
         """
-        商品の一覧を取得する
+        商品の一覧、もしくは一位の商品をを取得する
         """
-        queryset = Product.objects.all()
-        serializer = ProductSerializer(queryset, many=True)
-        
+        if id is None:
+            queryset = Product.objects.all()
+            serializer = ProductSerializer(queryset, many=True)
+        else:
+            product = self.get_object(id)
+            serializer = ProductSerializer(product)
         return Response(serializer.data, status.HTTP_200_OK)
 
     def post(self, request, format=None):
@@ -30,6 +38,20 @@ class ProductView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
+    
+    def put(self, request, format=None):
+        product = self.get_object(id)
+        serializer = ProductSerializer(instance=product, data=requeset.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status.HTTP_200_OK)
+
+    def delete(self, request, id, format=None):
+        product = self.get_object(id)
+        product.delete()
+        return Response(statu=status.HTTP_200_OK)
+
+    
 
 class PurchaseView(APIView):
     """
