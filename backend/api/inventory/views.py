@@ -24,13 +24,37 @@ class ProductView(APIView):
         return Response(serializer.data, status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        serializer = ProductSerializer(data=request.data)
         #validationを通らなかった場合、例外を投げる
+        #⇒検証したデータを永続化する
+        serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        #検証したデータを永続化する
         serializer.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
+
+class PurchaseView(APIView):
+    """
+    仕入れ情報を登録する
+    """
+    def post(self, request, format=None):
+        serializer = PurchaseSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status.HTTP_201_CREATED)
+
+class SalesView(APIView):
+    """
+    売上情報を登録する
+    """
+    def post(self, request, format=None):
+        serializer = SalesSerializer(data=request.data)
+        serializer.is_vali(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status.HTTP_201_CREATED)
+
+
 
 class ProductModelViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+
