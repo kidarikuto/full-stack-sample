@@ -3,9 +3,10 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Product
-from .serializers import ProductSerializer
+from .models import Product, Purchase, Sales
+from .serializers import ProductSerializer, InventorySerializser, PurchaseSerializer, SalesSerializer
 from rest_framework import status
+from django.db.models import F, Value
 
 from rest_framework.viewsets import ModelViewSet
 
@@ -51,8 +52,6 @@ class ProductView(APIView):
         product.delete()
         return Response(statu=status.HTTP_200_OK)
 
-    
-
 class PurchaseView(APIView):
     """
     仕入れ情報を登録する
@@ -73,10 +72,26 @@ class SalesView(APIView):
         serializer.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
 
-
-
 class ProductModelViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-
+class InventoryView(APIView):   
+    # 仕入れ,売上情報を取得する
+    def get(self, request, id=None, fromat=None):
+        if id is None:
+            # 件数が多くなるので商品IDは必ず指定する
+            return Response(serializer.data, status.HTTP_400_BAD_REQUEST)
+        else:
+            # UNIONするために、それぞれフィールド名を再定義している
+            # WHERE句のようにfileterで絞り込み
+            # product_idに紐づく情報をprefetch_relatedでJOINしている
+            # valuesによって取得するデータやカラム名の加工
+            purchase = Purchase.objects.filter(product_id=id).prefetch_related('product').values(
+                "id", "quantity", type=Value('1'), date=F('purchase_date'), unit=F('product__price'))
+            sales = Sales.objects.filter(product_id=id).prefetch_related('product').values(
+                "id", "quantity", type=Value('2'), date=F('sales_date'), unit=F('product__price'))
+            # unionによって2つのクエリセットを1つにまとめている、その後order_byで日付カラムの並び変え
+            queryset = purchase.union(sales).order_by(F("date"))
+            serializer - InventorySerializser(queryset, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)

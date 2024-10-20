@@ -1,3 +1,0 @@
-djangorestframework
-mysqlclient
-django-cors-headers
