@@ -10,10 +10,16 @@ from django.db.models import F, Value
 
 from rest_framework.viewsets import ModelViewSet
 
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 class ProductView(APIView):
     """
     商品操作に関する関数
     """
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get_object(self, pk):
         try:
             return Product.objects.get(pk=pk)

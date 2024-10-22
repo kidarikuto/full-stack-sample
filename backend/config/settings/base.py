@@ -186,3 +186,10 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 # AUTH_USER_MODEL = 'auth.User'
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=30),
+    'TOTATE_REFRESH_TOKENS': True,
+    'UPDATE_LAST_LOGIN': True,
+}
