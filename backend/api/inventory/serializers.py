@@ -10,12 +10,12 @@ class PurchaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Purchase
         fields = '__all__'
-class SalesSerializer(serializers.ModelSerializer):
+class SaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sales
         fields = '__all__'
 
-class InventorySerializser(serializers.Serializer):
+class InventorySerializer(serializers.Serializer):
     id = serializers.IntegerField()
     unit = serializers.IntegerField()
     quantity = serializers.IntegerField()

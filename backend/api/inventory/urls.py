@@ -14,5 +14,5 @@ urlpatterns = [
     path('inventories/<int:id>',views.InventoryView.as_view()),
     path('token/',TokenObtainPairView.as_view(),name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(),name='token_refresh'),
-    path('products/',views.ProductView.as_view()),
+    path('login/', views.LoginView.as_view()),
 ]

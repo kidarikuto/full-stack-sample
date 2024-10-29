@@ -1,24 +1,31 @@
 from django.shortcuts import render
-
+from django.conf import settings
 # Create your views here.
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .models import Product, Purchase, Sales
-from .serializers import ProductSerializer, InventorySerializser, PurchaseSerializer, SalesSerializer
-from rest_framework import status
 from django.db.models import F, Value
+from rest_framework.exceptions import NotFound
+
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from .models import Product, Purchase, Sales
+from .serializers import InventorySerializer, ProductSerializer, PurchaseSerializer, SaleSerializer
+from rest_framework import status
+
 
 from rest_framework.viewsets import ModelViewSet
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from api.inventory.authentication import RefreshJWTAuthentication
+
+
 
 class ProductView(APIView):
     """
     商品操作に関する関数
     """
     authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     def get_object(self, pk):
         try:
@@ -30,10 +37,10 @@ class ProductView(APIView):
         """
         商品の一覧、もしくは一位の商品をを取得する
         """
-        if id is None:
+        if id is None :
             queryset = Product.objects.all()
             serializer = ProductSerializer(queryset, many=True)
-        else:
+        else: 
             product = self.get_object(id)
             serializer = ProductSerializer(product)
         return Response(serializer.data, status.HTTP_200_OK)
@@ -46,9 +53,9 @@ class ProductView(APIView):
         serializer.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
     
-    def put(self, request, format=None):
+    def put(self, request, id, format=None):
         product = self.get_object(id)
-        serializer = ProductSerializer(instance=product, data=requeset.data)
+        serializer = ProductSerializer(instance=product, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status.HTTP_200_OK)
@@ -56,7 +63,7 @@ class ProductView(APIView):
     def delete(self, request, id, format=None):
         product = self.get_object(id)
         product.delete()
-        return Response(statu=status.HTTP_200_OK)
+        return Response(status = status.HTTP_200_OK)
 
 class PurchaseView(APIView):
     """
@@ -73,8 +80,8 @@ class SalesView(APIView):
     売上情報を登録する
     """
     def post(self, request, format=None):
-        serializer = SalesSerializer(data=request.data)
-        serializer.is_vali(raise_exception=True)
+        serializer = SaleSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status.HTTP_201_CREATED)
 
@@ -84,8 +91,8 @@ class ProductModelViewSet(ModelViewSet):
 
 class InventoryView(APIView):   
     # 仕入れ,売上情報を取得する
-    def get(self, request, id=None, fromat=None):
-        if id is None:
+    def get(self, request, id=None, format=None):
+        if id is None :
             # 件数が多くなるので商品IDは必ず指定する
             return Response(serializer.data, status.HTTP_400_BAD_REQUEST)
         else:
@@ -99,5 +106,37 @@ class InventoryView(APIView):
                 "id", "quantity", type=Value('2'), date=F('sales_date'), unit=F('product__price'))
             # unionによって2つのクエリセットを1つにまとめている、その後order_byで日付カラムの並び変え
             queryset = purchase.union(sales).order_by(F("date"))
-            serializer - InventorySerializser(queryset, many=True)
-        return Response(serializer.data, status.HTTP_200_OK)
+            serializer = InventorySerializer(queryset, many=True)
+            return Response(serializer.data, status.HTTP_200_OK)
+
+class LoginView(APIView):
+    """ユーザーのログイン処理
+    Args:
+    APIView (class): rest_framework.viewsのAPIViewを受け取る
+    """
+    # 認証クラスの指定
+    # リクエストヘッダーにtokenを差し込む追加処理はないのでそのまま継承
+    authentication_classes = [JWTAuthentication]
+    # アクセス許可の指定
+    permission_classes = []
+
+    def post(self, request):
+        # return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        """
+        json形式のデータをシリアライズする
+
+        """
+        serializer = TokenObtainPairSerializer(data=request.data) 
+        serializer.is_valid(raise_exception=True)
+        access = serializer.validated_data.get("access", None)
+        refresh = serializer.validated_data.get("refresh", None)
+
+        if access:
+            response = Response(status=status.HTTP_200_OK)
+            max_age = settings.COOKIE_TIME
+            response.set_cookie('access', access, httponly=True, max_age=max_age)
+            response.set_cookie('refresh', refresh, httponly=True, max_age=max_age)
+            return response
+        return Response({'errMsg': 'ユーザーの認証に失敗しました'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    

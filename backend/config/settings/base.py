@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 from timedelta import datetime
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -35,9 +36,9 @@ INSTALLED_APPS = [
     # local apps
     "rest_framework",
     "rest_framework_simplejwt",
-    'corsheaders',
-    'api.hello_db',
-    'api.inventory',
+    "corsheaders",
+    "api.hello_db",
+    "api.inventory",
     # default
     "django.contrib.admin",
     "django.contrib.auth",
@@ -46,20 +47,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
-
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':(
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES':['rest_framework.permissions.IsAuthenticated']
-}
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=15),
-    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=30),
-    'TOTATE_REFRESH_TOKENS': True,
-    'UPDATE_LAST_LOGIN': True,
-}
 
 
 MIDDLEWARE = [
@@ -187,9 +174,20 @@ CORS_ALLOWED_ORIGINS = [
 
 # AUTH_USER_MODEL = 'auth.User'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'api.inventory.authentication.AccessJWTAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']
+}
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(minutes=15),
     'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=30),
-    'TOTATE_REFRESH_TOKENS': True,
+    'ROTATE_REFRESH_TOKENS': True,
     'UPDATE_LAST_LOGIN': True,
 }
+
+# クッキーの有効期限に使用する
+COOKIE_TIME = 60 * 60 * 12
