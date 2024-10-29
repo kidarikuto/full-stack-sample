@@ -17,6 +17,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from api.inventory.authentication import RefreshJWTAuthentication
+from .authentication import AccessJWTAuthentication, RefreshJWTAuthentication
 
 
 
@@ -24,8 +25,8 @@ class ProductView(APIView):
     """
     商品操作に関する関数
     """
-    authentication_classes = [JWTAuthentication]
-    permission_classes = []
+    authentication_classes = [AccessJWTAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get_object(self, pk):
         try:
@@ -121,12 +122,7 @@ class LoginView(APIView):
     permission_classes = []
 
     def post(self, request):
-        # return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        """
-        json形式のデータをシリアライズする
-
-        """
-        serializer = TokenObtainPairSerializer(data=request.data) 
+        serializer = TokenObtainPairSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         access = serializer.validated_data.get("access", None)
         refresh = serializer.validated_data.get("refresh", None)
@@ -139,4 +135,30 @@ class LoginView(APIView):
             return response
         return Response({'errMsg': 'ユーザーの認証に失敗しました'}, status=status.HTTP_401_UNAUTHORIZED)
     
-    
+class RetryView(APIView):
+    authentication_classes = [RefreshJWTAuthentication]
+    permission_classes = []
+
+    def post(self, request):
+        request.data['refresh'] = request.META.get('HTTP_REFRESH_TOKEN')
+        serializer = TokenRefreshSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        access = serializer.validated_data.get('access', None)
+        refresh = serializer.validated_data.get("refresh", None)
+        if access:
+            response = Response(status=status.HTTP_200_OK)
+            max_age = settings.COOKIE_TIME
+            response.set_cookie('access', access, httponly=True, max_age=max_age)
+            response.set_cookie('refresh', refresh, httponly=True, max_age=max_age)
+            return response
+        return Response({'errMsg': 'ユーザーの認証に失敗しました'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class LogoutView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def post(self, request, *args):
+        response = Response(status=status.HTTP_200_OK)
+        response.delete_cookie('access')
+        response.delete_cookie('refresh')
+        return response
