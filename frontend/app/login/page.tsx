@@ -37,6 +37,7 @@ export default function Page() {
         //     username: event.username,
         //     password: event.password,
         // };
+        //　javascriptオブジェクトを使用する
         const data =  {
             username: event.target.username.value, // フォームの`name`属性に一致する
             password: event.target.password.value,
