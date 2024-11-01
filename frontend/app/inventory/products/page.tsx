@@ -24,7 +24,7 @@ import {
     Delete as DeleteIcon,
     Edit as EditIcon,
 } from "@mui/icons-material";
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import productsData from "./sample/dummy_products.json";
@@ -85,15 +85,11 @@ export default function Page() {
         if (action === "add") {
             handleAdd(data);
         } else if (action === "update") {
-            if (data.id === null) {
-            return;
-            }
+            if (data.id === null) { return; }
             handleEdit(data);
             } else if (action === "delete") {
-                if (data.id === null) {
-                return;
-            }
-            handleDelete(data.id);
+                if (data.id === null) { return; }
+                handleDelete(data.id);
         }
     };
 
@@ -110,7 +106,8 @@ export default function Page() {
         setId(0);
         };
     const handleAdd = (data: ProductData) => {
-        result('success','商品が登録されました')
+        axios.post("/api/inventory/products", data)
+            .then((response) => { result('success', '商品が登録できました') }); 
         setId(0);
     };
 
@@ -146,8 +143,7 @@ export default function Page() {
                 variant="contained"
                 startIcon={<AddIcon />}
                 onClick={() => handleShowNewRow()}
-            >
-                商品を追加する
+            >商品を追加する
             </Button>
             <Box
                 component="form"

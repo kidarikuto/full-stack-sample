@@ -72,11 +72,13 @@ export default function Page({ params }: {
         setOpen(false);
     };
     useEffect(() => {
-        axios.get('/api/inventory/products/${paramas.id}')
-            .then((response) => {
-                setProduct(response.data);
-            });
-        axios.get('/api/inventory/inventories/${params.id}')
+        axios.get(`/api/inventory/products/${params.id}`)
+        .then((response) => {
+            setProduct(response.data);
+        })
+        .catch((error) => console.error(error));
+        
+        axios.get(`/api/inventory/inventories/${params.id}`)
             .then((response) => {
                 const inventoryData: InventoryData[] = [];
                 let key: number = 1;
@@ -96,7 +98,8 @@ export default function Page({ params }: {
                     inventoryData.unshift(newElement);
                 });
                 setData(inventoryData);
-            });
+            })
+            .catch((error) => console.log(error));
     }, [open])
 
     const onSubmit = (event: any): void => {
