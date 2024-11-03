@@ -125,7 +125,11 @@ export default function Page() {
         setId(0);
     };
     const handleEdit = (data: ProductData) => {
-        result('success', '商品が更新されました')
+        console.log(data);
+        axios.put(`/api/inventory/products/${data.id}`,data)
+            .then((response) => {
+                result('success','商品が更新されました');
+            });
         setId(0);
     };
     const handleDelete = (id: number) => {
