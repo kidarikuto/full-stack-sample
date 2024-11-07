@@ -20,7 +20,7 @@ import { useForm } from "react-hook-form";
 import { useState, useEffect } from 'react';
 import productsData from "../sample/dummy_products.json";
 import inventoriesData from "../sample/dummy_inventories.json";
-import axios from 'axios';
+import axios from '../../../../plugins/axios';
 
 type ProductData = {
     id: number;
@@ -57,8 +57,6 @@ export default function Page({ params }: {
     // 読込データを保持
     const [product, setProduct] = useState<ProductData>({ id: 0, name: "", price: 0,  description: ""});
     const [data, setData] = useState<Array<InventoryData>>([]);
-    // submit時のactionを分岐させる
-    const [action, setAction] = useState<string>("");
     const [open, setOpen] = useState(false);
     const [severity, setSeverity] = useState<AlertColor>('success');
     const [message, setMessage] = useState('');
@@ -67,7 +65,9 @@ export default function Page({ params }: {
         setSeverity(severity);
         setMessage(message);
     };
-    
+    // submit時のactionを分岐させる
+    const [action, setAction] = useState<string>("");
+
     const handleClose = (event: any, reason: any) => {
         setOpen(false);
     };
@@ -121,11 +121,27 @@ export default function Page({ params }: {
 
     // 仕入れ・卸し処理
     const handlePurchase = (data: FormData) => {
-        result('success', '商品を仕入れました')
+        const purchase = {
+            quantity: data.quantity,
+            purchase_date: new Date(),
+            product: data.id,
+        };
+        axios.post("/api/inventory/purchases",purchase)
+            .then((response) =>{
+                result('success','商品を仕入れました')
+            })
     };
 
     const handleSell = (data: FormData) => {
-        result('success', '商品を卸しました')
+        const sale = {
+            quantity: data.quantity,
+            sales_date: new Date(),
+            product: data.id,
+        };
+        axios.post("/api/inventory/sales",sale)
+            .then((response) => {
+                result('success','商品を卸しました')
+            });
     };
 
     return (
