@@ -10,7 +10,6 @@ from .models import Product, Purchase, Sales
 from .serializers import InventorySerializer, ProductSerializer, PurchaseSerializer, SaleSerializer
 from rest_framework import status
 
-
 from rest_framework.viewsets import ModelViewSet
 
 from rest_framework.permissions import IsAuthenticated
@@ -18,7 +17,6 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
 from api.inventory.authentication import RefreshJWTAuthentication
 from .authentication import AccessJWTAuthentication, RefreshJWTAuthentication
-
 
 
 class ProductView(APIView):
@@ -49,6 +47,7 @@ class ProductView(APIView):
     def post(self, request, format=None):
         #validationを通らなかった場合、例外を投げる
         #⇒検証したデータを永続化する
+        print(f"\nReceived Request Data: {request.data}\n")
         serializer = ProductSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -71,6 +70,7 @@ class PurchaseView(APIView):
     仕入れ情報を登録する
     """
     def post(self, request, format=None):
+        print(f"\nReceived Request Data: {request.data}\n")
         serializer = PurchaseSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()

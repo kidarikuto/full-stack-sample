@@ -21,7 +21,7 @@ class Purchase(models.Model):
     """
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(verbose_name='数量')
-    purchase_date = models.DateField(verbose_name='仕入日時')
+    purchase_date = models.DateTimeField(verbose_name='仕入日時',null=True)
 
     class Meta:
         db_table = 'purchase'
