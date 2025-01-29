@@ -126,7 +126,7 @@ export default function Page({ params }: {
             purchase_date: new Date(),
             product: data.id,
         };
-        axios.post("/api/inventory/purchases",purchase)
+        axios.post("/api/inventory/purchase",purchase)
             .then((response) =>{
                 result('success','商品を仕入れました')
             })
