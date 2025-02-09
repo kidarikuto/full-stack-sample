@@ -108,6 +108,10 @@ class InventoryView(APIView):
             # unionによって2つのクエリセットを1つにまとめている、その後order_byで日付カラムの並び変え
             queryset = purchase.union(sales).order_by(F("date"))
             serializer = InventorySerializer(queryset, many=True)
+            if not serializer.is_valid():
+                print("\n{serializer.errors}\n")
+                return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
+            print(f"\nInventorySerializer:{serializer.data}\n")
             return Response(serializer.data, status.HTTP_200_OK)
 
 class LoginView(APIView):
