@@ -11,7 +11,7 @@ urlpatterns = [
     path("sales/",views.SalesView.as_view()),
     path("products/model",views.ProductModelViewSet.as_view({'get': 'list','post': 'create'})),
     path("productrs/model/",views.ProductModelViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('inventories/<int:id>',views.InventoryView.as_view()),
+    path('inventories/<int:id>/',views.InventoryView.as_view()),
     path('token/',TokenObtainPairView.as_view(),name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(),name='token_refresh'),
     path('login/', views.LoginView.as_view()),

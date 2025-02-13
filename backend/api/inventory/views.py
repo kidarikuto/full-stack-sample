@@ -23,8 +23,11 @@ class ProductView(APIView):
     """
     商品操作に関する関数
     """
-    authentication_classes = [AccessJWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [AccessJWTAuthentication]
+    # permission_classes = [IsAuthenticated]
+    # 認証無効化時、認証クラスを空にする
+    authentication_classes = []
+    permission_classes = []
 
     def get_object(self, pk):
         try:
@@ -91,8 +94,11 @@ class ProductModelViewSet(ModelViewSet):
     serializer_class = ProductSerializer
 
 class InventoryView(APIView):   
+    authentication_classes = []
+    permission_classes = []
     # 仕入れ,売上情報を取得する
     def get(self, request, id=None, format=None):
+        print(f"\n inventoryView: id={id}\n")  # デバッグ用
         if id is None :
             # 件数が多くなるので商品IDは必ず指定する
             return Response(serializer.data, status.HTTP_400_BAD_REQUEST)
@@ -108,9 +114,6 @@ class InventoryView(APIView):
             # unionによって2つのクエリセットを1つにまとめている、その後order_byで日付カラムの並び変え
             queryset = purchase.union(sales).order_by(F("date"))
             serializer = InventorySerializer(queryset, many=True)
-            if not serializer.is_valid():
-                print("\n{serializer.errors}\n")
-                return Response(serializer.errors,status.HTTP_400_BAD_REQUEST)
             print(f"\nInventorySerializer:{serializer.data}\n")
             return Response(serializer.data, status.HTTP_200_OK)
 
@@ -121,41 +124,47 @@ class LoginView(APIView):
     """
     # 認証クラスの指定
     # リクエストヘッダーにtokenを差し込む追加処理はないのでそのまま継承
-    authentication_classes = [JWTAuthentication]
+    # authentication_classes = [JWTAuthentication]
+    authentication_classes = []
     # アクセス許可の指定
     permission_classes = []
 
     def post(self, request):
-        serializer = TokenObtainPairSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        access = serializer.validated_data.get("access", None)
-        refresh = serializer.validated_data.get("refresh", None)
+        # 認証無効化時、以下コメントアウト
+        # serializer = TokenObtainPairSerializer(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # access = serializer.validated_data.get("access", None)
+        # refresh = serializer.validated_data.get("refresh", None)
 
-        if access:
-            response = Response(status=status.HTTP_200_OK)
-            max_age = settings.COOKIE_TIME
-            response.set_cookie('access', access, httponly=True, max_age=max_age)
-            response.set_cookie('refresh', refresh, httponly=True, max_age=max_age)
-            return response
-        return Response({'errMsg': 'ユーザーの認証に失敗しました'}, status=status.HTTP_401_UNAUTHORIZED)
+        # if access:
+        #     response = Response(status=status.HTTP_200_OK)
+        #     max_age = settings.COOKIE_TIME
+        #     response.set_cookie('access', access, httponly=True, max_age=max_age)
+        #     response.set_cookie('refresh', refresh, httponly=True, max_age=max_age)
+            # return response
+        # return Response({'errMsg': 'ユーザーの認証に失敗しました'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'msg': 'ログアウト処理は不要です'}, status=status.HTTP_200_OK)
     
 class RetryView(APIView):
-    authentication_classes = [RefreshJWTAuthentication]
+    # authentication_classes = [RefreshJWTAuthentication]
+    authentication_classes = []
     permission_classes = []
 
     def post(self, request):
-        request.data['refresh'] = request.META.get('HTTP_REFRESH_TOKEN')
-        serializer = TokenRefreshSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        access = serializer.validated_data.get('access', None)
-        refresh = serializer.validated_data.get("refresh", None)
-        if access:
-            response = Response(status=status.HTTP_200_OK)
-            max_age = settings.COOKIE_TIME
-            response.set_cookie('access', access, httponly=True, max_age=max_age)
-            response.set_cookie('refresh', refresh, httponly=True, max_age=max_age)
-            return response
-        return Response({'errMsg': 'ユーザーの認証に失敗しました'}, status=status.HTTP_401_UNAUTHORIZED)
+        # 認証無効化時、以下コメントアウト
+        # request.data['refresh'] = request.META.get('HTTP_REFRESH_TOKEN')
+        # serializer = TokenRefreshSerializer(data=request.data)
+        # serializer.is_valid(raise_exception=True)
+        # access = serializer.validated_data.get('access', None)
+        # refresh = serializer.validated_data.get("refresh", None)
+        # if access:
+        #     response = Response(status=status.HTTP_200_OK)
+        #     max_age = settings.COOKIE_TIME
+        #     response.set_cookie('access', access, httponly=True, max_age=max_age)
+        #     response.set_cookie('refresh', refresh, httponly=True, max_age=max_age)
+        #     return response
+        # return Response({'errMsg': 'ユーザーの認証に失敗しました'}, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({'msg': 'ログアウト処理は不要です'}, status=status.HTTP_200_OK)
 
 class LogoutView(APIView):
     authentication_classes = []
