@@ -115,8 +115,7 @@ class InventoryView(APIView):
             queryset = purchase.union(sales).order_by(F("date"))
             serializer = InventorySerializer(queryset, many=True)
             print(f"\nInventorySerializer:{serializer.data}\n")
-            return Response(serializer.data, status.HTTP_200_OK)
-
+            return Response(serializer.data, status.HTTP_200_OK)    
 class LoginView(APIView):
     """ユーザーのログイン処理
     Args:

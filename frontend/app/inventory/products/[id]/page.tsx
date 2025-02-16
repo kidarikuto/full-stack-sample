@@ -122,11 +122,11 @@ export default function Page({ params }: {
     // 仕入れ・卸し処理
     const handlePurchase = (data: FormData) => {
         const purchase = {
+            product: data.id,
             quantity: data.quantity,
             purchase_date: new Date(),
-            product: data.id,
         };
-        axios.post("/api/inventory/purchase",purchase)
+        axios.post("/api/inventory/purchase/",purchase)
             .then((response) =>{
                 result('success','商品を仕入れました')
             })

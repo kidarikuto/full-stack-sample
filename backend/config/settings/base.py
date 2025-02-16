@@ -166,6 +166,8 @@ LOGGING = {
 
 # すべてのオリジンを許可する場合
 CORS_ALLOW_ALL_ORIGINS = True
+# 認証情報の送信を許可
+# CORS_ALLOW_CREDENTIALS = True  
 
 # または特定のオリジンを許可する場合（例: ReactアプリケーションのURL）
 CORS_ALLOWED_ORIGINS = [
@@ -176,10 +178,12 @@ CORS_ALLOWED_ORIGINS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'api.inventory.authentication.AccessJWTAuthentication',
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'api.inventory.authentication.AccessJWTAuthentication',
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated']
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.IsAuthenticated'
+    ]
 }
 
 SIMPLE_JWT = {
