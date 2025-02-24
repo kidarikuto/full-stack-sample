@@ -9,7 +9,7 @@
 	// "features": {},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [8000],
+	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "pip3 install --user -r requirements.lock",
@@ -17,15 +17,15 @@
 	// Configure tool-specific properties.
 	"customizations": {
 	// configure properties specific to vs code
-		"vscode":{
-			"settings": {
-				"pylint.args": [
-					"--load-plugins",
-					"pylint_django",
-					"--django-settings-module",
-					"config.settings.development"
-				]
-			}
+	"vscode":{
+		"settings": {
+		"pylint.args": [
+			"--load-plugins",
+			"pylint_django",
+			"--django-settings-module",
+			"config.settings.development"
+		]
+		}
 	}
 	}
 
