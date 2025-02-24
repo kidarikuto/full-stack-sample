@@ -55,11 +55,11 @@ export default function Page({ params }: {
     } = useForm();
 
     // 読込データを保持
-    const [product, setProduct] = useState<ProductData>({ id: 0, name: "", price: 0,  description: ""});
-    const [data, setData] = useState<Array<InventoryData>>([]);
-    const [open, setOpen] = useState(false);
+    const [product, setProduct]   = useState<ProductData>({ id: 0, name: "", price: 0,  description: ""});
+    const [data, setData]         = useState<Array<InventoryData>>([]);
+    const [open, setOpen]         = useState(false);
     const [severity, setSeverity] = useState<AlertColor>('success');
-    const [message, setMessage] = useState('');
+    const [message, setMessage]   = useState('');
     const result = (severity: AlertColor, message: string) => {
         setOpen(true);
         setSeverity(severity);

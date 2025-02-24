@@ -34,7 +34,8 @@ type ProductData = {
     id: number | null;
     name: string;
     price: number;
-    description: string;
+    // description: string;
+    inventory: number
 };
 
 export default function Page() {
@@ -67,7 +68,9 @@ export default function Page() {
                 console.log(data)
                 setData(data)
             })
-            .catch((error) => console.error(error));       
+            .catch((error) => console.error(error));  
+
+         
     }, [open])
 
     // 登録データを保持
@@ -79,7 +82,7 @@ export default function Page() {
             id: id,
             name: event.name,
             price: Number(event.price),
-            description: event.description,
+            inventory: event.inventory,
         };
         // actionによってHTTPメソッドと使用するパラメーターを切り替える
         if (action === "add") {
@@ -167,7 +170,7 @@ export default function Page() {
                             <TableCell>商品ID</TableCell>
                             <TableCell>商品名</TableCell>
                             <TableCell>単価</TableCell>
-                            <TableCell>説明</TableCell>
+                            <TableCell>在庫数</TableCell>
                             <TableCell></TableCell>
                             <TableCell></TableCell>
                         </TableRow>

@@ -43,8 +43,27 @@ class ProductView(APIView):
             queryset = Product.objects.all()
             serializer = ProductSerializer(queryset, many=True)
         else: 
-            product = self.get_object(id)
-            serializer = ProductSerializer(product)
+            # product = self.get_object(id)
+            # serializer = ProductSerializer(product)
+            purchase = Purchase.objects.filter(product_id=id).prefetch_related('product').values(
+                "id", 
+                "quantity", 
+                type=Value('1'), 
+                date=F('purchase_date'), 
+                unit=F('product__price')
+            )
+            sales = Sales.objects.filter(product_id=id).prefetch_related('product').values(
+                "id", 
+                "quantity", 
+                type=Value('2'), 
+                date=F('sales_date'), 
+                unit=F('product__price')
+            )
+            # unionによって2つのクエリセットを1つにまとめている、その後order_byで日付カラムの並び変え
+            queryset = purchase.union(sales).order_by(F("date"))
+            print(f"\nqueryset:{queryset}\n")
+            serializer = InventorySerializer(queryset, many=True)
+            print(f"\nInventorySerializer:{serializer.data}\n")
         return Response(serializer.data, status.HTTP_200_OK)
 
     def post(self, request, format=None):
@@ -115,6 +134,8 @@ class InventoryView(APIView):
             queryset = purchase.union(sales).order_by(F("date"))
             serializer = InventorySerializer(queryset, many=True)
             print(f"\nInventorySerializer:{serializer.data}\n")
+            print(f"\nInventorySerializer:{purchase}\n")
+            print(f"\nInventorySerializer:{sales}\n")
             return Response(serializer.data, status.HTTP_200_OK)    
 class LoginView(APIView):
     """ユーザーのログイン処理
