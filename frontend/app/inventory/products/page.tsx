@@ -35,7 +35,7 @@ type ProductData = {
     name: string;
     price: number;
     // description: string;
-    inventory: number
+    stock: number
 };
 
 export default function Page() {
@@ -319,7 +319,7 @@ export default function Page() {
                                     <TableCell>{data.id}</TableCell>
                                     <TableCell>{data.name}</TableCell>
                                     <TableCell>{data.price}</TableCell>
-                                    <TableCell>{data.description}</TableCell>
+                                    <TableCell>{data.stock}</TableCell>
                                     <TableCell><Link href={`/inventory/products/${data.id}`}>在庫処理</Link></TableCell>
                                     <TableCell>
                                         <IconButton

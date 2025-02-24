@@ -7,7 +7,7 @@ from rest_framework.exceptions import NotFound
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Product, Purchase, Sales
-from .serializers import InventorySerializer, ProductSerializer, PurchaseSerializer, SaleSerializer
+from .serializers import InventorySerializer, ProductSerializer, PurchaseSerializer, SaleSerializer, ProductAllSerializer
 from rest_framework import status
 
 from rest_framework.viewsets import ModelViewSet
@@ -18,7 +18,16 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, Toke
 from api.inventory.authentication import RefreshJWTAuthentication
 from .authentication import AccessJWTAuthentication, RefreshJWTAuthentication
 
-
+class ProductListView(APIView):
+    def get(self, request, format=None):
+        """
+        商品一覧を取得（在庫数も含める）
+        """
+        queryset = Product.objects.all()
+        serializer = ProductAllSerializer(queryset, many=True)
+        print(f"\nserializer:{serializer}\n")
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
 class ProductView(APIView):
     """
     商品操作に関する関数
@@ -40,30 +49,16 @@ class ProductView(APIView):
         商品の一覧、もしくは一位の商品をを取得する
         """
         if id is None :
+            # queryset = Product.objects.all()
+            # serializer = ProductSerializer(queryset, many=True)
+            # print(f"\queryset{queryset}\n")
+            # print(f"\nProductSerializer{serializer}\n")
             queryset = Product.objects.all()
-            serializer = ProductSerializer(queryset, many=True)
+            serializer = ProductAllSerializer(queryset, many=True)
+            print(f"\nserializer:{serializer.data}\n")
         else: 
-            # product = self.get_object(id)
-            # serializer = ProductSerializer(product)
-            purchase = Purchase.objects.filter(product_id=id).prefetch_related('product').values(
-                "id", 
-                "quantity", 
-                type=Value('1'), 
-                date=F('purchase_date'), 
-                unit=F('product__price')
-            )
-            sales = Sales.objects.filter(product_id=id).prefetch_related('product').values(
-                "id", 
-                "quantity", 
-                type=Value('2'), 
-                date=F('sales_date'), 
-                unit=F('product__price')
-            )
-            # unionによって2つのクエリセットを1つにまとめている、その後order_byで日付カラムの並び変え
-            queryset = purchase.union(sales).order_by(F("date"))
-            print(f"\nqueryset:{queryset}\n")
-            serializer = InventorySerializer(queryset, many=True)
-            print(f"\nInventorySerializer:{serializer.data}\n")
+            product = self.get_object(id)
+            serializer = ProductSerializer(product)            
         return Response(serializer.data, status.HTTP_200_OK)
 
     def post(self, request, format=None):
