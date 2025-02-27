@@ -7,11 +7,11 @@
     - ~~更新系API~~
     - ~~再認証処理のつなぎ込み~~
     - ~~仕入れ卸しのpost~~
-    - 在庫履歴の表示
-	- InventorySerializerのvalidationを通す
-	- frontendの表示形式と一致させる
-    - 在庫一覧の表示
-- バックエンドの実装
+    - ~~在庫履歴の表示~~
+	- ~~InventorySerializerのvalidationを通す~~
+	- ~~frontendの表示形式と一致させる~~
+    - ~~在庫一覧の表示~~
+- 売上一括登録
     - 同期処理（ファイル登録）
     - 非同期処理（バッチ処理）
 - Raspberry Pi

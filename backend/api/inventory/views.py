@@ -190,3 +190,15 @@ class LogoutView(APIView):
         response.delete_cookie('access')
         response.delete_cookie('refresh')
         return response
+    
+class SalesSyncViews(APIView):
+    pass
+
+class SalesAsyncViews(APIView):
+    pass
+
+class SalesList(APIView):
+    pass
+
+
+

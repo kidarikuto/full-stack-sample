@@ -17,4 +17,7 @@ urlpatterns = [
     path('login/', views.LoginView.as_view()),
     path('retry/', views.RetryView.as_view()),
     path('logout/',views.LogoutView.as_view()),
+    path('sync/',views.SalesSyncViews.as_view()),
+    path('async/',views.SalesAsyncViews.as_view()),
+    path('summary/',views.SalesList.as_view()),
 ]
