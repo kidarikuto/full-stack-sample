@@ -51,7 +51,7 @@ class Sales(models.Model):
     product =  models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(verbose_name='数量')
     sales_date = models.DateTimeField(verbose_name='売上')
-    import_file = models.ForeignKey(SalesFile, on_delete=models.CASCADE, verbose_name='売上ファイルID')
+    import_file = models.ForeignKey(SalesFile, on_delete=models.CASCADE, verbose_name='売上ファイルID',null=True,blank=True)
 
     class Meta:
         db_table = 'sales'
