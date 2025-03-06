@@ -97,19 +97,10 @@ export default function InventoryLayout ({
                         <IconButton onClick={() => toggleDrawer(true)}>
                             <MenuIcon />
                         </IconButton>
-                        <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{ flexGrow: 1 }}
-                        >
+                        <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
                             在庫管理システム
                         </Typography>
-                        <Button
-                        variant="contained"
-                        startIcon={<LogoutIcon />}
-                        onClick={() => handleLogout()}
-                        >
+                        <Button variant="contained" startIcon={<LogoutIcon />} onClick={() => handleLogout()}>
                             ログアウト
                         </Button>
                     </Toolbar>
@@ -117,29 +108,25 @@ export default function InventoryLayout ({
                 <Drawer open={open} onClose={() => toggleDrawer(false)} anchor="left">
                     {list()}
                 </Drawer>
-                <Box
-                component="main"
-                sx={{
-                    flexGrow: 1,
-                    p:3,
-                    // AppBarと被るため下にずらしている
-                    marginTop: "64px",
-                    width: "100%",
-                    backgraoud: "white",
-                }}
-                >
+                <Box component="main"
+                    sx={{
+                        flexGrow: 1,
+                        p:3,
+                        // AppBarと被るため下にずらしている
+                        marginTop: "64px",
+                        width: "100%",
+                        backgraoud: "white",
+                    }}>
                     {children}
                 </Box>
-                <Box
-                    component='footer'
+                <Box component='footer'
                     sx={{
                         width: '100px',
                         position: 'fixed',
                         textAlign: 'center',
                         bottom: 0,
                         baskground: "#1076d2",
-                    }}
-                >
+                    }}>
                     <Typography variant="caption" color="white">
                         ©2023 full stack web development
                     </Typography>
