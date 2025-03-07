@@ -1,21 +1,27 @@
 from django.shortcuts import render
 from django.conf import settings
 # Create your views here.
-from django.db.models import F, Value
-from rest_framework.exceptions import NotFound
 
+from django.db.models import F, Value, Sum
+from django.db.models.functions import TruncMonth
+
+from rest_framework import status
+from rest_framework.exceptions import NotFound
+from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import Product, Purchase, Sales, SalesFile, Status
-from .serializers import InventorySerializer, ProductSerializer, PurchaseSerializer, SaleSerializer, ProductAllSerializer,\
-                            FileSerializer
-
-import pandas
-from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+
+from .models import Product, Purchase, Sales, SalesFile, Status
+from .serializers import InventorySerializer, ProductSerializer, PurchaseSerializer, SaleSerializer, ProductAllSerializer,\
+                            FileSerializer, SalesSerializer
+
+
+import pandas
 
 from api.inventory.authentication import RefreshJWTAuthentication
 from .authentication import AccessJWTAuthentication, RefreshJWTAuthentication
@@ -215,8 +221,8 @@ class SalesSyncViews(APIView):
 class SalesAsyncViews(APIView):
     pass
 
-class SalesList(APIView):
-    pass
-
-
-
+class SalesList(ListAPIView):
+    queryset = Sales.objects.annotate(monthly_data=TruncMonth('sales_data')).values('monthly_data')\
+                            .annotate(monthly_price=Sum('quantity')).order_by('monthly_data')
+    serializer_class = SalesSerializer
+        

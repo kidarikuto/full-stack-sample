@@ -33,6 +33,9 @@ class SaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sales
         fields = '__all__'
+class SalesSerializer(serializers.Serializer):
+    monthly_data = serializers.DateTimeField(format='%Y-%m')
+    monthly_price = serializers.IntegerField()
 
 class InventorySerializer(serializers.Serializer):
     id = serializers.IntegerField()

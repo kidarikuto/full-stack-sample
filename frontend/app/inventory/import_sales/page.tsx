@@ -1,15 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from '../../../plugins/axios';
 import {
     Alert,AlertColor,
     Box,Button,
+    Paper,
     Snackbar,
+    Table,TableBody,TableCell,TableContainer,TableHead,TableRow,
     Typography,
 } from '@mui/material';
 import { MuiFileInput } from 'mui-file-input'
-import { PanoramaSharp } from '@mui/icons-material';
 
 export default function Page() {
     const [open, setOpen] = useState(false);
@@ -20,12 +21,21 @@ export default function Page() {
         setSeverity(severity);
         setMessage(message);
     }
+    const [data, setData] = useState([])
 
     const [fileSync, setFileSync] = useState();
     const onChangeFileSync = (newFile: any) => {
         setFileSync(newFile);
     }
 
+    useEffect(() => {
+        axios.get('/api/inventory/summary/')
+            .then((res) => res.data)
+            .then((data) => {
+                setData(data)
+            })
+    }, [open])
+    
     const doAddSync = ((e: any) => {
         if (!fileSync) {
             result('error', 'ファイルを指定して下さい')
@@ -63,6 +73,26 @@ export default function Page() {
                 <Typography variant="subtitle1">同期でファイルを取込</Typography>
                 <MuiFileInput value={fileSync} onChange={onChangeFileSync}/>
                 <Button variant="contained" onClick={doAddSync}>登録</Button>
+            </Box><Box m={2}>
+                <Typography variant="subtitle1">年月ごとの売上集計</Typography>
+                <TableContainer component={Paper}>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>処理月</TableCell>
+                                <TableCell>合計数量</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {data.map((data: any) =>(
+                                <TableRow key={data.monthly_date}>
+                                    <TableCell>{data.monthly_date}</TableCell>
+                                    <TableCell>{data.monthly_price}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </Box>
         </Box>
     )
