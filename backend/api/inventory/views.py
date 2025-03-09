@@ -204,6 +204,8 @@ class SalesSyncViews(APIView):
         serializer = FileSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         filename = serializer.validated_data['file'].name
+        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+        print("\nf{filename}\n")
 
         with open(filename, 'wb') as f:
             f.write(serializer.validated_data['file'].read())
@@ -215,8 +217,6 @@ class SalesSyncViews(APIView):
         for _ , row in df.iterrows():
             sales = Sales(product_id = row['product'], sales_data=row['date'],quantity=row['quantity'], import_file=sales_file)
             sales.save()
-        
-        return Response(status=201)
     
 class SalesAsyncViews(APIView):
     pass
@@ -225,4 +225,5 @@ class SalesList(ListAPIView):
     queryset = Sales.objects.annotate(monthly_data=TruncMonth('sales_data')).values('monthly_data')\
                             .annotate(monthly_price=Sum('quantity')).order_by('monthly_data')
     serializer_class = SalesSerializer
-        
+    print(f"\n{queryset=}\n")
+    

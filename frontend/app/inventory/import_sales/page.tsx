@@ -85,8 +85,8 @@ export default function Page() {
                         </TableHead>
                         <TableBody>
                             {data.map((data: any) =>(
-                                <TableRow key={data.monthly_date}>
-                                    <TableCell>{data.monthly_date}</TableCell>
+                                <TableRow key={data.monthly_data}>
+                                    <TableCell>{data.monthly_data}</TableCell>
                                     <TableCell>{data.monthly_price}</TableCell>
                                 </TableRow>
                             ))}
