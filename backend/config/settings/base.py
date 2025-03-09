@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "api.hello_db",
     "api.inventory",
+    "batch",
     # default
     "django.contrib.admin",
     "django.contrib.auth",

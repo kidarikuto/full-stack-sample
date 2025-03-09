@@ -29,7 +29,7 @@ export default function Page() {
     const onChangeFileSync = (newFile: any) => {
         setFileSync(newFile);
     }
-    const onChangeFileAsync = (newFil: any) => {
+    const onChangeFileAsync = (newFile: any) => {
         setFileAsync(newFile);
     }
 

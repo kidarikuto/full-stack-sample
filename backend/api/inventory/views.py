@@ -215,6 +215,8 @@ class SalesSyncViews(APIView):
         for _ , row in df.iterrows():
             sales = Sales(product_id = row['product'], sales_data=row['date'],quantity=row['quantity'], import_file=sales_file)
             sales.save()
+        
+        return Response(status=201)
     
 class SalesAsyncViews(APIView):
     def post(self, request, format=None):
