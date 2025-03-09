@@ -79,7 +79,7 @@ export default function InventoryLayout ({
                         <ListItemText primary="在庫一括登録" />
                     </ListItemButton>
                 </ListItem>
-                <ListItem component="a" href="/inventory/sales" disablePadding>
+                <ListItem component="a" href="/inventory/import_sales" disablePadding>
                     <ListItemButton>
                         <ListItemText primary="売上一括登録" />
                     </ListItemButton>
