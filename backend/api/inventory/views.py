@@ -204,8 +204,6 @@ class SalesSyncViews(APIView):
         serializer = FileSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         filename = serializer.validated_data['file'].name
-        print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-        print("\nf{filename}\n")
 
         with open(filename, 'wb') as f:
             f.write(serializer.validated_data['file'].read())
@@ -219,7 +217,19 @@ class SalesSyncViews(APIView):
             sales.save()
     
 class SalesAsyncViews(APIView):
-    pass
+    def post(self, request, format=None):
+        serializer = FileSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        filename = serializer.validated_data['file'].name
+
+        with open(filename, 'wb') as f:
+            f.write(serializer.validated_data['file'].read())
+
+        sales_file = SalesFile(file_name=filename, status=Status.ASYNC_UNPROCESSED)
+        sales_file.save()
+
+        return Response(status=201)
 
 class SalesList(ListAPIView):
     queryset = Sales.objects.annotate(monthly_data=TruncMonth('sales_data')).values('monthly_data')\

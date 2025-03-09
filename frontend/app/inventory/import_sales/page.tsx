@@ -24,8 +24,13 @@ export default function Page() {
     const [data, setData] = useState([])
 
     const [fileSync, setFileSync] = useState();
+    const [fileAsync, setFileAsync] = useState();
+
     const onChangeFileSync = (newFile: any) => {
         setFileSync(newFile);
+    }
+    const onChangeFileAsync = (newFil: any) => {
+        setFileAsync(newFile);
     }
 
     useEffect(() => {
@@ -59,6 +64,29 @@ export default function Page() {
             })
 
     })
+    const doAddAsync = ((e: any) => {
+        if (!fileAsync) {
+            result('error', 'ファイルを指定して下さい')
+            return
+        }
+        const params = {
+            file: fileAsync
+        }
+        axios.post('/api/inventory/async/', params, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(function (response) {
+                console.log(response)
+                result('success', '非同期ファイルが登録されました')
+            })
+            .catch(function (error) {
+                console.log(error)
+                result('error', '非同期ファイルの登録に失敗しました')
+            })
+
+    })
     const handleClose = (event: any, reason: any) => {
         setOpen(false);
     };
@@ -73,7 +101,13 @@ export default function Page() {
                 <Typography variant="subtitle1">同期でファイルを取込</Typography>
                 <MuiFileInput value={fileSync} onChange={onChangeFileSync}/>
                 <Button variant="contained" onClick={doAddSync}>登録</Button>
-            </Box><Box m={2}>
+            </Box>
+            <Box m={2}>
+                <Typography variant="subtitle1">非同期でファイルを取込</Typography>
+                <MuiFileInput value={fileAsync} onChange={onChangeFileAsync}/>
+                <Button variant="contained" onClick={doAddAsync}>登録</Button>
+            </Box>
+            <Box m={2}>
                 <Typography variant="subtitle1">年月ごとの売上集計</Typography>
                 <TableContainer component={Paper}>
                     <Table>
