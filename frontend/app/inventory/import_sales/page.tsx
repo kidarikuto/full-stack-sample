@@ -108,7 +108,7 @@ export default function Page() {
                 <Button variant="contained" onClick={doAddAsync}>登録</Button>
             </Box>
             <Box m={2}>
-                <Typography variant="subtitle1">年月ごとの売上集計</Typography>
+                <Typography variant="h5">年月ごとの売上集計</Typography>
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>

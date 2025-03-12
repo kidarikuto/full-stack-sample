@@ -29,6 +29,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import productsData from "./sample/dummy_products.json";
 import axios from '../../../plugins/axios';
+import { MuiFileInput } from 'mui-file-input'
 
 type ProductData = {
     id: number | null;
@@ -138,11 +139,27 @@ export default function Page() {
         setId(0);
     };
 
+    const [fileSync, setFileSync] = useState();
+    const onChangeFileSync = (newFile: any) => { setFileSync(newFile); };
+    const doAddSync = ((e: any) => {
+        if (!fileSync) {
+            result('error', 'ファイルを指定して下さい')
+            return
+        }
+        const params = {
+            file: fileSync
+        }
+        
+    })
+
     return (
         <>
             <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
                 <Alert severity={severity}>{message}</Alert>
             </Snackbar>
+            <Typography variant="h5">在庫一括登録</Typography>
+                <MuiFileInput value={fileSync} onChange={onChangeFileSync}/>
+                <Button variant="contained" onClick={doAddSync}>登録</Button>
             <Typography variant="h5">商品一覧</Typography>
             <Button
                 variant="contained"
